@@ -22,3 +22,12 @@ class Config:
 
     HOST = os.getenv('HOST')
     PORT = int(os.getenv('PORT', 5000))
+
+    MYSELF_URL = os.getenv('MYSELF_URL')
+
+    REURL_TOKEN1 = os.getenv('REURL_TOKEN1')
+    REURL_TOKEN2 = os.getenv('REURL_TOKEN2')
+    REURL_TOKEN3 = os.getenv('REURL_TOKEN3')
+
+    TELEGRAM_ALERT_TOKEN = os.getenv('TELEGRAM_ALERT_TOKEN')
+    TELEGRAM_MY_CHAT_ROOM = os.getenv('TELEGRAM_MY_CHAT_ROOM')
