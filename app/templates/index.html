@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Home - NN's Site</title>
-  </head>
-  <body>
-    {% extends "base.html" %}
-    {% block content %}
-    <h1> Home </h1>
-    <p> Still working on it. </p>
-    {% endblock %}
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <title>Home - NN's Site</title>
+    </head>
+    <body>
+        {% extends "base.html" %}
+        {% block breadcrumb %}
+        <li class="breadcrumb-item active" aria-current="page">Home</li>
+        {% endblock %}
+        {% block content %}
+        <p> Still working on it. </p>
+        {% endblock %}
+    </body>
 </html>

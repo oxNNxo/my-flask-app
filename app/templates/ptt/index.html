@@ -4,18 +4,21 @@
         <meta charset="utf-8">
         <title>PTT - NN's Site</title>
     </head>
-        <body>
+    <body>
         {% extends "base.html" %}
+        {% block breadcrumb %}
+        <li class="breadcrumb-item active"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">PTT</li>
+        {% endblock %}
         {% block content %}
-            <h1> PTT </h1>
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">PTT 新文章</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">PTT New Articles</h6>
-                    <p class="card-text">查看有關鍵字的PTT新文章</p>
-                    <a href="{{ url_for('ptt.articles') }}" class="card-link">PTT 新文章列表</a>
-                </div>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">PTT 新文章</h5>
+                <h6 class="card-subtitle mb-2 text-muted">PTT New Articles</h6>
+                <p class="card-text">查看有關鍵字的PTT新文章</p>
+                <a href="{{ url_for('ptt.articles') }}" class="card-link">PTT 新文章列表</a>
             </div>
-            {% endblock %}
-        </body>
+        </div>
+        {% endblock %}
+    </body>
 </html>

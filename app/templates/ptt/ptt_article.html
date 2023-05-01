@@ -11,6 +11,11 @@
     </head>
     <body>
         {% extends "base.html" %}
+        {% block breadcrumb %}
+        <li class="breadcrumb-item active"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('ptt.index') }}">PTT</a></li>
+        <li class="breadcrumb-item active" aria-current="page">PTT新文章</li>
+        {% endblock %}
         {% block content %}
         <table class="table table-striped table-bordered ptt-article-table">
             <thead>
