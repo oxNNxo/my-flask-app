@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>PTT - NN's Site</title>
-  </head>
-  <body>
-    {% extends "base.html" %}
-    {% block content %}
-    <h1> PTT </h1>
-    <p> Still working on it. </p>
-    {% endblock %}
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <title>PTT - NN's Site</title>
+    </head>
+        <body>
+        {% extends "base.html" %}
+        {% block content %}
+            <h1> PTT </h1>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">PTT 新文章</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">PTT New Articles</h6>
+                    <p class="card-text">查看有關鍵字的PTT新文章</p>
+                    <a href="{{ url_for('ptt.articles') }}" class="card-link">PTT 新文章列表</a>
+                </div>
+            </div>
+            {% endblock %}
+        </body>
 </html>
