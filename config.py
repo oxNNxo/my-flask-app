@@ -6,6 +6,8 @@ load_dotenv()
 
 class Config:
 
+    FLASK_DEBUG_MODE = os.getenv('FLASK_DEBUG_MODE')
+
     SECRET_KEY = os.getenv('SECRET_KEY')
 
     DATABASE_HOST = os.getenv('DATABASE_HOST')

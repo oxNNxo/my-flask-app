@@ -11,3 +11,7 @@ A simple template for python flask.
 ### run app
 
 `flask run`
+
+`gunicorn start:app -c gunicorn.conf.py`
+
+dependent on web server
