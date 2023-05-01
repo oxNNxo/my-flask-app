@@ -5,4 +5,4 @@ psycopg2-binary==2.9.6
 gunicorn==2.0.2
 ansicolors==1.1.8
 requests==2.24.0
-
+beautifulsoup4==4.9.1
