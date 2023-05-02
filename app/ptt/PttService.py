@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 import re
 import time
 import logging
+from flask import current_app
 
-from app.datasource import db
 from app.models.ptt import User, Board, Article, Subs, UserSubs
 from app import CommonService
 from app import MessageService
@@ -34,6 +34,7 @@ def get_pyptt_user_subs_board_with_latest_time():
 
 
 def get_pyptt_user_board_key():
+    db = current_app.extensions['sqlalchemy']
     all_results = (
                     db.session
                     .query(User, Subs)
@@ -67,6 +68,7 @@ def crawl_ptt(board):
 
 
 def update_pyptt_board_latest_time(blt_list):
+    db = current_app.extensions['sqlalchemy']
     for blt in blt_list:
         (
             db.session
@@ -79,6 +81,7 @@ def update_pyptt_board_latest_time(blt_list):
 
 
 def update_pyptt_article(article_list):
+    db = current_app.extensions['sqlalchemy']
     for article in article_list:
         article_dict = article.__dict__
         article_dict.pop('_sa_instance_state')
@@ -91,14 +94,14 @@ def update_pyptt_article(article_list):
 def check_ptt_newfeed():
     logger.info('Checking for ptt newfeed')
     board_latest_time = get_pyptt_user_subs_board_with_latest_time()
-    logger.info(board_latest_time)
+    logger.debug(board_latest_time)
     blt = dict()
     for board in board_latest_time:
         blt[board.board] = dict()
         blt[board.board]['pre_latest_time'] = board.latest_time.astimezone(datetime.timezone(datetime.timedelta(hours=+8)))
-    logger.info(blt)
+    logger.debug(blt)
     user_board_key_list = get_pyptt_user_board_key()
-    logger.info(user_board_key_list)
+    logger.debug(user_board_key_list)
     ubk = dict()
     for user, subs in user_board_key_list:
         if user not in ubk:
@@ -106,7 +109,7 @@ def check_ptt_newfeed():
         if subs.board not in ubk[user]:
             ubk[user][subs.board] = list()
         ubk[user][subs.board].append(subs.sub_key)
-    logger.info(ubk)
+    logger.debug(ubk)
     try:
         for boardName in blt:
             blt[boardName]['article'] = crawl_ptt(boardName)
