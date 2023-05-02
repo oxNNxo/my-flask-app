@@ -1,4 +1,4 @@
-from app.datasource import db
+from app.Extension import db
 
 class User(db.Model):
     __table__ = db.metadatas[None].tables['pyptt_user']
