@@ -2,7 +2,7 @@ from flask import Flask
 import logging
 
 from config import Config
-from app.datasource import db
+from app.Extension import db
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=Config().LOGGING_LEVEL)
 
