@@ -16,7 +16,7 @@ db = current_app.extensions['sqlalchemy']
 
 logger = logging.getLogger(__name__)
 
-token_reurl = [config.REURL_TOKEN1, config.REURL_TOKEN2, config.REURL_TOKEN3]
+token_reurl = config['REURL_TOKEN']
 
 def get_articles_paginate(page, per_page):
     return Article.query.order_by(Article.published.desc()).paginate(page=page,per_page=per_page,max_per_page=100,error_out=False)
