@@ -9,13 +9,14 @@ from flask import current_app
 from app.models.ptt import User, Board, Article, Subs, UserSubs
 from app import CommonService
 from app import MessageService
-from config import Config
 
-config = Config()
+
+config = current_app.config
+db = current_app.extensions['sqlalchemy']
 
 logger = logging.getLogger(__name__)
 
-token_reurl = [config.REURL_TOKEN1, config.REURL_TOKEN2, config.REURL_TOKEN3]
+token_reurl = config['REURL_TOKEN']
 
 def get_articles_paginate(page, per_page):
     return Article.query.order_by(Article.published.desc()).paginate(page=page,per_page=per_page,max_per_page=100,error_out=False)
@@ -34,7 +35,6 @@ def get_pyptt_user_subs_board_with_latest_time():
 
 
 def get_pyptt_user_board_key():
-    db = current_app.extensions['sqlalchemy']
     all_results = (
                     db.session
                     .query(User, Subs)
@@ -68,7 +68,6 @@ def crawl_ptt(board):
 
 
 def update_pyptt_board_latest_time(blt_list):
-    db = current_app.extensions['sqlalchemy']
     for blt in blt_list:
         (
             db.session
@@ -81,7 +80,6 @@ def update_pyptt_board_latest_time(blt_list):
 
 
 def update_pyptt_article(article_list):
-    db = current_app.extensions['sqlalchemy']
     for article in article_list:
         article_dict = article.__dict__
         article_dict.pop('_sa_instance_state')
