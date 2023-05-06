@@ -17,10 +17,13 @@ def create_app(config_class=Config):
     jwt.init_app(app)
     
     # Register blueprints here
-    from app.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    with app.app_context():
+        
+        from app.main import bp as main_bp
+        app.register_blueprint(main_bp)
 
-    from app.ptt import bp as ptt_bp
-    app.register_blueprint(ptt_bp, url_prefix='/ptt')
+        from app.ptt import bp as ptt_bp
+        app.register_blueprint(ptt_bp, url_prefix='/ptt')
+
 
     return app
