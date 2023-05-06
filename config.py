@@ -1,4 +1,5 @@
 import os
+import json
 
 from dotenv import load_dotenv
 
@@ -25,9 +26,7 @@ class Config:
 
     MYSELF_URL = os.getenv('MYSELF_URL')
 
-    REURL_TOKEN1 = os.getenv('REURL_TOKEN1')
-    REURL_TOKEN2 = os.getenv('REURL_TOKEN2')
-    REURL_TOKEN3 = os.getenv('REURL_TOKEN3')
+    REURL_TOKEN = json.loads(os.getenv('REURL_TOKEN'))
 
     TELEGRAM_ALERT_TOKEN = os.getenv('TELEGRAM_ALERT_TOKEN')
     TELEGRAM_MY_CHAT_ROOM = os.getenv('TELEGRAM_MY_CHAT_ROOM')
