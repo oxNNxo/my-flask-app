@@ -2,7 +2,7 @@ from flask import Flask
 import logging
 
 from config import Config
-from app.Extension import db
+from app.Extension import db, jwt
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=Config().LOGGING_LEVEL)
 
@@ -14,7 +14,8 @@ def create_app(config_class=Config):
     db.init_app(app)
     with app.app_context():
         db.reflect()
-
+    jwt.init_app(app)
+    
     # Register blueprints here
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
