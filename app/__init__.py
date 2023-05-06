@@ -25,5 +25,7 @@ def create_app(config_class=Config):
         from app.ptt import bp as ptt_bp
         app.register_blueprint(ptt_bp, url_prefix='/ptt')
 
+        from app.prize import bp as prize_bp
+        app.register_blueprint(prize_bp, url_prefix='/prize')
 
     return app
