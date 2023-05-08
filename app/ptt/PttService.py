@@ -132,7 +132,7 @@ def check_ptt_newfeed():
                             if re.search(_pattern,article.title) :
                                 if 'reurl.cc' not in article.link:
                                     article.link = CommonService.reurl(token,article.link)
-                                time.sleep(1)
+                                time.sleep(3)
                                 newfeed = 1
                                 morefeed = 1
                                 newfeed_article.append('{:<12}'.format(boardName) + ' ' + article.link + '\n' + article.title)    # board link <br> title
