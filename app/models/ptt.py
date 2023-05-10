@@ -8,9 +8,6 @@ class Board(db.Model):
 
 class Article(db.Model):
     __table__ = db.metadatas[None].tables['pyptt_article']
-    __mapper_args__ = {
-        'primary_key' : ['published', 'board', 'author']
-    }
 
 class Subs(db.Model):
     __table__ = db.metadatas[None].tables['pyptt_subs']
@@ -19,4 +16,10 @@ class UserSubs(db.Model):
     __table__ = db.metadatas[None].tables['pyptt_user_subs']
     __mapper_args__ = {
         'primary_key' : ['user_id', 'subs_id']
+    }
+
+class SubsArticle(db.Model):
+    __table__ = db.metadatas[None].tables['pyptt_subs_article']
+    __mapper_args__ = {
+        'primary_key' : ['article_id', 'subs_id']
     }
