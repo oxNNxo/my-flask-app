@@ -71,7 +71,7 @@ def check_cathaybk_etf_newfeed():
                 if latestday != latest_date_in_db_str :
                     msg = f'{etfName}\n{latestday}\n淨值：{netValue}\n漲跌幅：{netPercent}%'
                     logger.info(msg)
-                    eld_list.append((etf,datetime.datetime.strptime(latestday,'%Y/%m/%d').astimezone(tzTaipei)))
+                    eld_list.append((etf,datetime.datetime.strptime(f'{latestday}+08:00','%Y/%m/%d%z')))
                     for user in userList:
                         MessageService.lineNotifyMessage(msg,user.chat_id)
             except Exception as e:
