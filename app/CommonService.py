@@ -1,16 +1,16 @@
 import requests
 import json
 import logging
+from flask import current_app
 
-from config import Config
-
-config = Config()
+config = current_app.config
 
 logger = logging.getLogger(__name__)
 
+
 def wake_up_myself():
     logger.info('wake_up_myself')
-    url = config.MYSELF_URL
+    url = config['MYSELF_URL']
     try:
         conn = requests.get(url)
     except Exception as e:
