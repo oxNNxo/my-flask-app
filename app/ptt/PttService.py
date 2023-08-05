@@ -104,6 +104,33 @@ def filter_article(constrains=dict()):
         elif column == 'title':
             ands.append(and_(Article.title.contains(value)))
     return Article.query.filter(*ands).all()
+def delete_old_articles(days):
+    logger.info(f'delete old articles before {days} days ago')
+    delete_days_range = (datetime.datetime.now() - datetime.timedelta(days = days)).astimezone(datetime.timezone.utc)
+    subsarticles = (
+                    SubsArticle
+                    .query
+                    .join(Article,Article.id == SubsArticle.article_id)
+                    .filter(Article.published < delete_days_range)
+                    .order_by(Article.published.desc())
+                    .all()
+                    )
+    logger.info(subsarticles)
+    for subarticle in subsarticles:
+        db.session.delete(subarticle)
+    db.session.commit()
+    articles = (
+                Article.query
+                .filter(Article.published < delete_days_range)
+                .order_by(Article.published.desc())
+                .all()
+                )
+    logger.info(articles)
+    for article in articles:
+        db.session.delete(article)
+    db.session.commit()
+    logger.info('articles deleted successfully')
+
 
 
 def check_ptt_newfeed():
