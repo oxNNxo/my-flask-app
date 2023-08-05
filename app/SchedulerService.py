@@ -11,10 +11,11 @@ scheduler = current_app.apscheduler
 
 logger = logging.getLogger(__name__)
 
-@scheduler.task(id='check_ptt_newfeed', trigger='interval', minutes=config['PTT_CRAWLER_PERIOD'], misfire_grace_time=30,)
+@scheduler.task(id='check_ptt_newfeed_and_delete_old_articles', trigger='interval', minutes=config['PTT_CRAWLER_PERIOD'], misfire_grace_time=30,)
 def schedulerJobs_check_ptt_newfeed():
     with scheduler.app.app_context():
         PttService.check_ptt_newfeed()
+        PttService.delete_old_articles(days = 7)
 
 
 @scheduler.task(id='check_capitalfund_newfeed', trigger='interval', minutes=config['CAPITAL_FUND_CRAWLER_PERIOD'], misfire_grace_time=30,)
