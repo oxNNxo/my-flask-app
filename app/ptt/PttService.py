@@ -66,21 +66,18 @@ def crawl_ptt(board):
 def update_pyptt_board_latest_time(boardDict):
     for board, boardInfo in boardDict.items():
         board.latest_time = boardInfo['article'][0].published
-    db.session.commit()
     return
 
 
 def update_pyptt_article(article_list):
     for article in article_list:
         db.session.add(article)
-    db.session.commit()
-
+    return
 
 def update_subs_article(subs_article):
     for subs, article in subs_article:
         db.session.add(SubsArticle(subs_id=subs.id,article_id=article.id))
-    db.session.commit()
-
+    return
 
 def notify_subs_article(articleList,user):
     newfeed_article = list()
@@ -208,16 +205,14 @@ def check_ptt_newfeed():
         logger.error(str(e))
         pass
 
-    done = 0
-    while done == 0:
-        try:
-            update_pyptt_board_latest_time(boardDict)
-            update_pyptt_article(to_update_pyptt_article)
-            update_subs_article(subs_article)
-            done = 1
-            logger.info('Update ptt newfeed successfully')
-        except Exception as e:
-            MessageService.tgNotifyMessage(f'{__name__} - Update PyPTT board list error:{e}')
-            logger.error(str(e))
-            time.sleep(5)
+    try:
+        update_pyptt_board_latest_time(boardDict)
+        update_pyptt_article(to_update_pyptt_article)
+        update_subs_article(subs_article)
+        db.session.commit()
+        logger.info('Update ptt newfeed successfully')
+    except Exception as e:
+        MessageService.tgNotifyMessage(f'{__name__} - Update PyPTT board list error:{e}')
+        logger.error(str(e))
+        db.session.rollback()
     logger.info('Checking for ptt newfeed successfully')
