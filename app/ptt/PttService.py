@@ -22,7 +22,7 @@ tzTaipei = datetime.timezone(datetime.timedelta(hours=+8))
 
 token_reurl = config['REURL_TOKEN']
 
-def get_articles_paginate(page, per_page):
+def get_articles_paginate(page = 1, per_page = 10):
     all_results = (
         Article
         .query
@@ -94,16 +94,57 @@ def notify_subs_article(articleList,user):
     return
 
 
-def filter_article(constrains=dict()):
+def filter_article(constrains = dict(), page = 1, per_page = 10):
     ands = list()
     for column,value in constrains.items():
+        if value == '':
+            continue
         if column == 'board':
             ands.append(and_(Article.board==value))
         elif column == 'author':
-            ands.append(and_(Article.author==value))
+            ands.append(and_(Article.author.contains(value)))
         elif column == 'title':
-            ands.append(and_(Article.title.contains(value)))
-    return Article.query.filter(*ands).all()
+            ands.append(and_(Article.title.ilike(f'%{value}%')))
+        elif column == 'startDate':
+            ands.append(and_(Article.published >= datetime.datetime.strptime(value + " 00:00:00", "%Y/%m/%d %H:%M:%S").astimezone(tzTaipei)))
+        elif column == 'endDate':
+            ands.append(and_(Article.published <= datetime.datetime.strptime(value + " 23:59:59", "%Y/%m/%d %H:%M:%S").astimezone(tzTaipei)))
+    return (Article.query.filter(*ands).order_by(Article.published.desc())
+        .paginate(page=page,per_page=per_page,max_per_page=100,error_out=False))
+
+
+def initial_filter():
+    Board_list = Board.query.order_by(Board.board).all()
+    return {'board':Board_list}
+
+
+def delete_old_articles(days):
+    logger.info(f'delete old articles before {days} days ago')
+    delete_days_range = (datetime.datetime.now() - datetime.timedelta(days = days)).astimezone(datetime.timezone.utc)
+    subsarticles = (
+                    SubsArticle
+                    .query
+                    .join(Article,Article.id == SubsArticle.article_id)
+                    .filter(Article.published < delete_days_range)
+                    .order_by(Article.published.desc())
+                    .all()
+                    )
+    logger.info(subsarticles)
+    for subarticle in subsarticles:
+        db.session.delete(subarticle)
+    db.session.commit()
+    articles = (
+                Article.query
+                .filter(Article.published < delete_days_range)
+                .order_by(Article.published.desc())
+                .all()
+                )
+    logger.info(articles)
+    for article in articles:
+        db.session.delete(article)
+    db.session.commit()
+    logger.info('articles deleted successfully')
+
 
 
 def check_ptt_newfeed():
