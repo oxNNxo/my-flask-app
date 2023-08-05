@@ -31,12 +31,12 @@
             <tbody>
                 {% set article_index = namespace(value=1) %}
                 {% for article in ptt_article %}
-                <tr id="ptt-article-{{ article_index.value }}-row" class="ptt-article-row" onclick="show_article_content({{ article_index.value }})">
-                    <td>{{ article_index.value }}</td>
-                    <td>{{ article.published }}</td>
-                    <td>{{ article.board }}</td>
-                    <td>{{ article.author }}</td>
-                    <td><a href="{{ article.link }}">{{ article.title }}</a></td>
+                <tr id="ptt-article-{{ article_index.value }}-row" class="ptt-article-row">
+                    <td onclick="show_article_content({{ article_index.value }})">{{ article_index.value }}</td>
+                    <td onclick="show_article_content({{ article_index.value }})">{{ article.published }}</td>
+                    <td onclick="show_article_content({{ article_index.value }})">{{ article.board }}</td>
+                    <td onclick="show_article_content({{ article_index.value }})">{{ article.author }}</td>
+                    <td onclick="show_article_content({{ article_index.value }})"><a href="{{ article.link }}">{{ article.title }}</a></td>
                     {% if article_index.value == 1 %}
                     <td rowspan="{{ ptt_article.per_page }}" id="ptt-article-content" class="ptt-article-table ptt-article-content">{{ article.content }}</td>
                     {% endif %}
