@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>PTT - NN's Site</title>
+    </head>
+    <body>
+        {% extends "base.html" %}
+        {% block breadcrumb %}
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('ptt.index') }}">PTT</a></li>
+        <li class="breadcrumb-item active" aria-current="page">PTT 篩選</li>
+        {% endblock %}
+        {% block content %}
+        <form action="{{ url_for('ptt.articles') }}" method="post" class="row g-3">
+            <div class="col-12 col-md-4">
+                <label for="inputBoard" class="form-label">指定看板</label>
+                <input class="form-control" list="datalistBoard" id="inputBoard" placeholder="Type to search..." name="board">
+                <datalist id="datalistBoard">
+                {% for board in initialData['board'] %}
+                    <option value = {{ board.board }}>
+                {% endfor %}
+                </datalist>
+            </div>
+            <div class="col-6 col-md-4">
+                <label for="inputAuthor" class="form-label">作者</label>
+                <input type="text" class="form-control" id="inputAuthor" name="author">
+            </div>
+            <div class="col-6 col-md-4">
+                <label for="inputTitle" class="form-label">標題</label>
+                <input type="text" class="form-control" id="inputTilte" name="title">
+            </div>
+            <div class="col-6 col-md-4">
+                <label for="inputStartDate" class="form-label">日期區間起點(限七日內)</label>
+                <input type="text" class="form-control" id="inputStartDate" name="startDate">
+            </div>
+            <div class="col-6 col-md-4">
+                <label for="inputEndDate" class="form-label">日期區間終點(限七日內)</label>
+                <input type="text" class="form-control" id="inputEndDate" name="endDate">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">查詢</button>
+            </div>
+        </form>
+        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script>
+            $(function(){
+                var dateFormat = "yy/mm/dd",
+                from = $( "#inputStartDate" )
+                .datepicker({
+                        dateFormat: "yy/mm/dd",
+                        minDate: "-7d",
+                        maxDate: new Date()
+                    })
+                .datepicker('setDate', 'today')
+                .on( "change", function() {
+                    to.datepicker( "option", "minDate", getDate( this ) );
+                }),
+                to = $( "#inputEndDate" )
+                .datepicker({
+                        dateFormat: "yy/mm/dd",
+                        minDate: "-7d",
+                        maxDate: new Date()
+                })
+                .datepicker('setDate', 'today')
+                .on( "change", function() {
+                    from.datepicker( "option", "maxDate", getDate( this ) );
+                });
+            
+                function getDate( element ) {
+                    var date;
+                    try {
+                        date = $.datepicker.parseDate( dateFormat, element.value );
+                    } catch( error ) {
+                        date = null;
+                    }
+                
+                    return date;
+                }
+            });
+        </script>
+        {% endblock %}
+        
+    </body>
+    
+</html>
