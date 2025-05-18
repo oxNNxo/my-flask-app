@@ -47,7 +47,7 @@ def get_board_with_subs():
 def crawl_ptt(board):
     url =  'https://www.ptt.cc/atom/' + board + '.xml'
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0'}
-    response = requests.get(url,headers = headers)
+    response = requests.get(url,headers = headers,proxies={'http':'http://175.183.82.221:80'})
     soup = BeautifulSoup(response.content,'html.parser')
     articlelist = list()
     for entry in soup.find_all('entry') :
