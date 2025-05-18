@@ -18,7 +18,7 @@ def schedulerJobs_check_ptt_newfeed():
         PttService.delete_old_articles(days = 7)
 
 
-@scheduler.task(id='check_capitalfund_newfeed', trigger='interval', minutes=config['CAPITAL_FUND_CRAWLER_PERIOD'], misfire_grace_time=30,)
+# @scheduler.task(id='check_capitalfund_newfeed', trigger='interval', minutes=config['CAPITAL_FUND_CRAWLER_PERIOD'], misfire_grace_time=30,)
 def schedulerJobs_check_capitalfund_newfeed():
     with scheduler.app.app_context():
         CapitalFundService.check_capitalfund_newfeed()
