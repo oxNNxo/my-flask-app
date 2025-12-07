@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>訂閱咕咕雞-股票機器人會員 - NN's Site</title>
+</head>
+<style>
+    div.product {
+        display: grid;
+    }
+</style>
+
+<body>
+    {% extends "base.html" %}
+    {% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('store.index') }}">Store</a></li>
+    <li class="breadcrumb-item active" aria-current="page">訂閱咕咕雞-股票機器人會員</li>
+    {% endblock %}
+    {% block content %}
+    <div class="product">
+        <div class="row row-cols-2">
+            <div class="col-8">
+                <h1>咕咕雞-股票機器人會員</h1>
+                <img src="{{ url_for('static', filename='img/store-bot-command.png') }}" alt="" width="600px">
+                <p>查股機器人 - 即時取得股市資訊 歡迎訂閱使用 贊助一下電費 雲端費 加班費
+                    個人訂閱方案 50/月 500/年
+                    未來更新會增加功能 有特別需求的可以客製許願
+                    感謝乾爹 **阿崴 MKM 豪豪 沾沾 沼爸 冬眠 儒儒 阿民哥 蛤 洲洲 醬 阿咩咩 柴班長 Luka 棋靈王 Wayne 雪衣 柚子 找不到工作的歐郎 阿水哥** 支持</p>
+                <p>聯絡方式</br>
+                Discord: oonnoo_ 凱蒂貓</br>
+                email: yankees.yes123@gmail.com</p>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col">
+                        啟用碼 - 500元
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button>直接購買</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+</html>
