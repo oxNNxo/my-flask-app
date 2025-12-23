@@ -118,7 +118,7 @@ def callback_from_ecpay(request_data):
     ecpay_rtn_code = request_data.get('RtnCode')
     ecpayOrder = EcpayOrder.query.filter(EcpayOrder.order_id == order_id).first()
     ecpayOrder.ecpay_order_id = ecpay_order_id
-    ecpayOrder.paid_datetime = paid_datetime
+    ecpayOrder.paid_datetime = datetime.datetime.strptime(paid_datetime, '%Y/%m/%d %H:%M:%S').astimezone(tzTaipei)
     ecpayOrder.ecpay_order_status = '1'
     ecpayOrder.ecpay_payment_type = ecpay_payment_type
     ecpayOrder.ecpay_rtn_msg = ecpay_rtn_msg
