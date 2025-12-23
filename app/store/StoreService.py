@@ -6,6 +6,7 @@ import uuid
 import secrets
 import hmac
 import re
+from zoneinfo import ZoneInfo
 
 from flask import current_app
 
@@ -80,7 +81,7 @@ def gen_ecpay_payment_page(subscription_type):
         "Content-Type": "application/x-www-form-urlencoded"
     }
     order_id = "DCBOT" + datetime.datetime.now().astimezone(datetime.timezone.utc).astimezone(tzTaipei).strftime("%Y%m%d") + str(uuid.uuid4()).replace('-','')[:7].upper()
-    create_datetime = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+    create_datetime = datetime.datetime.now().astimezone(datetime.timezone.utc).astimezone(tzTaipei).strftime('%Y/%m/%d %H:%M:%S')
     dataform = {
         "MerchantID": config['ECPAY_MERCHANT_ID'],
         "MerchantTradeNo": order_id,
@@ -118,7 +119,7 @@ def callback_from_ecpay(request_data):
     ecpay_rtn_code = request_data.get('RtnCode')
     ecpayOrder = EcpayOrder.query.filter(EcpayOrder.order_id == order_id).first()
     ecpayOrder.ecpay_order_id = ecpay_order_id
-    ecpayOrder.paid_datetime = datetime.datetime.strptime(paid_datetime, '%Y/%m/%d %H:%M:%S').astimezone(datetime.timezone.utc)
+    ecpayOrder.paid_datetime = datetime.datetime.strptime(paid_datetime, '%Y/%m/%d %H:%M:%S').replace(tzinfo=ZoneInfo("Asia/Taipei"))
     ecpayOrder.ecpay_order_status = '1'
     ecpayOrder.ecpay_payment_type = ecpay_payment_type
     ecpayOrder.ecpay_rtn_msg = ecpay_rtn_msg
