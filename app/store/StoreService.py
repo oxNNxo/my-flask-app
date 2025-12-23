@@ -79,8 +79,10 @@ def gen_ecpay_payment_page(subscription_type):
     headers = {
         "Content-Type": "application/x-www-form-urlencoded"
     }
-    order_id = "DCBOT" + datetime.datetime.now().astimezone(datetime.timezone.utc).astimezone(tzTaipei).strftime("%Y%m%d") + str(uuid.uuid4()).replace('-','')[:7].upper()
-    create_datetime = datetime.datetime.now().astimezone(datetime.timezone.utc).astimezone(tzTaipei).strftime('%Y/%m/%d %H:%M:%S')
+    create_now = datetime.datetime.now()
+    order_id = "DCBOT" + create_now.astimezone(datetime.timezone.utc).astimezone(tzTaipei).strftime("%Y%m%d") + str(uuid.uuid4()).replace('-','')[:7].upper()
+    create_datetime = create_now.astimezone(datetime.timezone.utc).astimezone(tzTaipei).strftime('%Y/%m/%d %H:%M:%S')
+    create_datetime_db = create_now.strftime('%Y/%m/%d %H:%M:%S')
     dataform = {
         "MerchantID": config['ECPAY_MERCHANT_ID'],
         "MerchantTradeNo": order_id,
@@ -97,7 +99,7 @@ def gen_ecpay_payment_page(subscription_type):
     }
     check_mac_value = get_check_mac_value_from_dict(dataform)
     dataform["CheckMacValue"] = check_mac_value
-    ecpayOrder = gen_ecpay_order(order_id, subscription_type, create_datetime, price, check_mac_value)
+    ecpayOrder = gen_ecpay_order(order_id, subscription_type, create_datetime_db, price, check_mac_value)
 
     form_html = f"""
     <form id="ecpay-form" method="post" action="{url}">
