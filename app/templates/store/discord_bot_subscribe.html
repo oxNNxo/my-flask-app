@@ -20,27 +20,53 @@
     {% endblock %}
     {% block content %}
     <div class="product">
+        <h1>咕咕雞-股票機器人會員</h1>
         <div class="row row-cols-2">
             <div class="col-8">
-                <h1>咕咕雞-股票機器人會員</h1>
                 <img src="{{ url_for('static', filename='img/store-bot-command.png') }}" alt="" width="600px">
-                <p>查股機器人 - 即時取得股市資訊 歡迎訂閱使用 贊助一下電費 雲端費 加班費
-                    個人訂閱方案 50/月 500/年
-                    未來更新會增加功能 有特別需求的可以客製許願
-                    感謝乾爹 **阿崴 MKM 豪豪 沾沾 沼爸 冬眠 儒儒 阿民哥 蛤 洲洲 醬 阿咩咩 柴班長 Luka 棋靈王 Wayne 雪衣 柚子 找不到工作的歐郎 阿水哥** 支持</p>
-                <p>聯絡方式</br>
-                Discord: oonnoo_ 凱蒂貓</br>
+                <p>查股機器人 - 即時取得股市資訊 歡迎訂閱使用 贊助一下電費 雲端費 加班費<br>
+                    個人訂閱方案  500/年 提供一組金鑰<br>
+                    家庭訂閱方案 1800/年 提供四組金鑰<br>
+                    未來更新會增加功能 有特別需求的可以客製許願<br>
+                    感謝乾爹<br>
+                    阿崴 MKM 豪豪 沾沾 沼爸 冬眠 儒儒 阿民哥 蛤 洲洲 醬 阿咩咩<br>
+                    柴班長 Luka 棋靈王 Wayne 雪衣 柚子 找不到工作的歐郎 阿水哥<br>
+                    支持</p>
+                <p>聯絡方式<br>
+                Discord: oonnoo_ 凱蒂貓<br>
                 email: yankees.yes123@gmail.com</p>
             </div>
             <div class="col-4">
                 <div class="row">
                     <div class="col">
-                        啟用碼 - 500元
+                        請於付款前複製訂單編號 DCBOT開頭，避免遺失繳費資訊<br>
+                        私訊機器人，使用指令 /取得金鑰 + 訂單編號 即可獲得金鑰<br>
+                        再使用指令 /兌換金鑰 + 金鑰 已開通會籍<br>
+                        有任何問題請私訊 oonnoo_ 凱蒂貓
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button>直接購買</button>
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">個人年方案</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">500元</h6>
+                                <p class="card-text">提供一組金鑰<br>使用機器人指令<br>即可開通一年服務</p>
+                                <a href="discord-bot-stock-subscribe/pay?type=one-members-one-year" class="card-link">前往購買</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">家庭年方案</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">1799元</h6>
+                                <p class="card-text">提供四組金鑰<br>使用機器人指令<br>即可開通一年服務</p>
+                                <a href="discord-bot-stock-subscribe/pay?type=four-members-one-year" class="card-link">前往購買</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
