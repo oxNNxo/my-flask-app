@@ -68,11 +68,11 @@ def get_check_mac_value_from_dict(dataform):
 
 def gen_ecpay_payment_page(subscription_type):
     if subscription_type == 'one-members-one-year':
-        price = 500
+        price = config['ONE_MEMBERS_ONE_YEAR_PRICE']
         tradr_desc = '可無限使用機器人指令一年'
         item_name = '個人年度方案'
     elif subscription_type == 'four-members-one-year':
-        price = 1800
+        price = config['FOUR_MEMBERS_ONE_YEAR_PRICE']
         tradr_desc = '更優惠的價格 可無限使用機器人指令一年'
         item_name = '家庭年度方案'
     url = config['ECPAY_CHECK_OUT_API']
@@ -118,7 +118,7 @@ def callback_from_ecpay(request_data):
     ecpay_rtn_code = request_data.get('RtnCode')
     ecpayOrder = EcpayOrder.query.filter(EcpayOrder.order_id == order_id).first()
     ecpayOrder.ecpay_order_id = ecpay_order_id
-    ecpayOrder.paid_datetime = datetime.datetime.strptime(paid_datetime, '%Y/%m/%d %H:%M:%S').astimezone(tzTaipei)
+    ecpayOrder.paid_datetime = datetime.datetime.strptime(paid_datetime, '%Y/%m/%d %H:%M:%S').astimezone(datetime.timezone.utc)
     ecpayOrder.ecpay_order_status = '1'
     ecpayOrder.ecpay_payment_type = ecpay_payment_type
     ecpayOrder.ecpay_rtn_msg = ecpay_rtn_msg
