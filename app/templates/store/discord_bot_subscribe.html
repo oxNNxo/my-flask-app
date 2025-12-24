@@ -3,13 +3,40 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>訂閱咕咕雞-股票機器人會員 - NN's Site</title>
 </head>
 <style>
+    /* 取消不必要的 grid */
     div.product {
-        display: grid;
+        display: block;
+    }
+
+    /* 圖片自適應 */
+    .product img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 卡片在手機滿版 */
+    .card {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+
+    /* 手機版調整 */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .product p {
+            font-size: 0.95rem;
+        }
     }
 </style>
+
 
 <body>
     {% extends "base.html" %}
@@ -21,9 +48,9 @@
     {% block content %}
     <div class="product">
         <h1>咕咕雞-股票機器人會員</h1>
-        <div class="row row-cols-2">
-            <div class="col-8">
-                <img src="{{ url_for('static', filename='img/store-bot-command.png') }}" alt="" width="600px">
+        <div class="row">
+            <div class="col-12 col-lg-8">        
+                <img src="{{ url_for('static', filename='img/store-bot-command.png') }}" alt="" class="img-fluid">
                 <p>查股機器人 - 即時取得股市資訊 歡迎訂閱使用 贊助一下電費 雲端費 加班費<br>
                     個人訂閱方案  500/年 提供一組金鑰<br>
                     家庭訂閱方案 1799/年 提供四組金鑰<br>
@@ -36,7 +63,7 @@
                 Discord: oonnoo_ 凱蒂貓<br>
                 email: yankees.yes123@gmail.com</p>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-lg-4">
                 <div class="row">
                     <div class="col">
                         請於付款前複製訂單編號 DCBOT開頭，避免遺失繳費資訊<br>
