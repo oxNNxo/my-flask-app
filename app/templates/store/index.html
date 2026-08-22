@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Store - NN's Site</title>
+    </head>
+    <body>
+        {% extends "base.html" %}
+        {% block breadcrumb %}
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Store</li>
+        {% endblock %}
+        {% block content %}
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">訂閱咕咕雞-股票機器人會員</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Discord Bot Membership</h6>
+                        <p class="card-text">升級會員，以使用更多功能</p>
+                        <a href="{{ url_for('store.discord_bot_stock_subscribe') }}" class="card-link">訂閱連結</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </body>
+</html>

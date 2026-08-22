@@ -29,6 +29,9 @@ def create_app(config_class=Config):
         from app.finance import bp as finance_bp
         app.register_blueprint(finance_bp, url_prefix='/finance')
 
+        from app.store import bp as store_bp
+        app.register_blueprint(store_bp, url_prefix='/store')
+
         from app import SchedulerService
 
     scheduler.start()

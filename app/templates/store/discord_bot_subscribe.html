@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>訂閱咕咕雞-股票機器人會員 - NN's Site</title>
+    <!-- Discord Optimized Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NN's Site">
+    <meta property="og:title" content="🐔 咕咕雞 Discord 股票機器人｜會員訂閱">
+    <meta property="og:description" content="即時查股｜個人年 500 元・家庭年 1699 元｜付款後立即取得金鑰，指令兌換即可使用。">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='img/store-og-image.png', _external=True) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+</head>
+<style>
+    /* 取消不必要的 grid */
+    div.product {
+        display: block;
+    }
+
+    /* 圖片自適應 */
+    .product img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 卡片在手機滿版 */
+    .card {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+
+    /* 手機版調整 */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .product p {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+
+<body>
+    {% extends "base.html" %}
+    {% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('store.index') }}">Store</a></li>
+    <li class="breadcrumb-item active" aria-current="page">訂閱咕咕雞-股票機器人會員</li>
+    {% endblock %}
+    {% block content %}
+    <div class="product">
+        <h1>咕咕雞-股票機器人會員</h1>
+        <div class="row">
+            <div class="col-12 col-lg-8">        
+                <img src="{{ url_for('static', filename='img/store-bot-command.png') }}" alt="" class="img-fluid">
+                <p>查股機器人 - 即時取得股市資訊 歡迎訂閱使用 贊助一下電費 雲端費 加班費<br>
+                    個人訂閱方案  500/年 提供一組金鑰<br>
+                    家庭訂閱方案 1799/年 提供四組金鑰<br>
+                    未來更新會增加功能 有特別需求的可以客製許願<br>
+                    感謝乾爹<br>
+                    阿崴 MKM 豪豪 沾沾 沼爸 冬眠 儒儒 阿民哥 蛤 洲洲 醬 阿咩咩<br>
+                    柴班長 Luka 棋靈王 Wayne 雪衣 柚子 找不到工作的歐郎 阿水哥<br>
+                    支持</p>
+                <p>聯絡方式<br>
+                Discord: oonnoo_ 凱蒂貓<br>
+                email: yankees.yes123@gmail.com</p>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="row">
+                    <div class="col">
+                        ⚠購買前請注意⚠<br>
+                        請於付款前複製訂單編號 DCBOT開頭，避免遺失繳費資訊<br>
+                        繳費完成後請私訊機器人<br>
+                        1️⃣使用指令 /取得金鑰 + 訂單編號 即可獲得金鑰<br>
+                        2️⃣使用指令 /兌換金鑰 + 金鑰 以開通會籍<br>
+                        <img src="{{ url_for('static', filename='img/redeem-tutorial.png') }}" alt="可使用指令 !兌換教學 查看圖文說明" class="img-fluid">
+                        可使用指令 !兌換教學 查看圖文說明<br>
+                        有任何問題請私訊 oonnoo_ 凱蒂貓<br>
+                        謝謝配合🙇‍♂️
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">個人年方案</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">500元</h6>
+                                <p class="card-text">提供一組金鑰<br>使用機器人指令<br>即可開通一年服務</p>
+                                <a href="discord-bot-stock-subscribe/pay?type=one-members-one-year" class="card-link">前往購買</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">家庭年方案</h5>
+                                <h6 class="card-subtitle mb-2 text-muted"><del>1799元</del>1699元</h6>
+                                <p class="card-text">提供四組金鑰<br>使用機器人指令<br>即可開通一年服務</p>
+                                <a href="discord-bot-stock-subscribe/pay?type=four-members-one-year" class="card-link">前往購買</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+</html>
