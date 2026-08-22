@@ -33,11 +33,15 @@ def crawl_cathaybk(etfId):
         url = f'https://cathaybk.moneydj.com/w/djjson/FundETFDataJSON.djjson?queryType=ROIChart&queryId={etfId}&datatype=ETF&rangeStart={todayStr}&rangeEnd={todayStr}'
         response = requests.get(url=url)
         dataRs = json.loads(response.content.decode('big5').encode('utf-8'))
+        if dataRs['ResultSet']['responseCode'] != "200":
+            return dataRs['ResultSet']['responseCode']
         etf_info['name'] = dataRs['ResultSet']['data'][0]['return']['name']
 
         url = f'https://cathaybk.moneydj.com/w/djjson/FundETFDataJSON.djjson?queryType=ETFNavPriceCompare&queryId={etfId}'
         response = requests.get(url)
         dataRs = json.loads(response.content.decode('big5').encode('utf-8'))
+        if dataRs['ResultSet']['responseCode'] != "200":
+            return dataRs['ResultSet']['responseCode']
         etf_info['detail'] = dataRs['ResultSet']['data'][1]
     except Exception as e:
         logger.error(str(e))
@@ -63,6 +67,9 @@ def check_cathaybk_etf_newfeed():
         if latest_date_in_db != today:
             try:
                 cathaybkEtfInfo = crawl_cathaybk(etf.etf_id)
+                if type(cathaybkEtfInfo) is not dict:
+                    logger.error(f'{etf.etf_id} {cathaybkEtfInfo}')
+                    continue
                 latest_date_in_db_str = latest_date_in_db.strftime('%Y/%m/%d')
                 etfName = cathaybkEtfInfo['name']
                 latestday = cathaybkEtfInfo['detail']['date']
@@ -71,7 +78,7 @@ def check_cathaybk_etf_newfeed():
                 if latestday != latest_date_in_db_str :
                     msg = f'{etfName}\n{latestday}\n淨值：{netValue}\n漲跌幅：{netPercent}%'
                     logger.info(msg)
-                    eld_list.append((etf,datetime.datetime.strptime(latestday,'%Y/%m/%d').astimezone(tzTaipei)))
+                    eld_list.append((etf,datetime.datetime.strptime(f'{latestday}+08:00','%Y/%m/%d%z')))
                     for user in userList:
                         MessageService.lineNotifyMessage(msg,user.chat_id)
             except Exception as e:

@@ -5,8 +5,10 @@ import re
 import time
 import logging
 from flask import current_app
+import uuid
+from sqlalchemy import and_
 
-from app.models.ptt import User, Board, Article, Subs, UserSubs
+from app.models.ptt import User, Board, Article, Subs, UserSubs, SubsArticle
 from app import CommonService
 from app import MessageService
 
@@ -16,41 +18,36 @@ db = current_app.extensions['sqlalchemy']
 
 logger = logging.getLogger(__name__)
 
+tzTaipei = datetime.timezone(datetime.timedelta(hours=+8))
+
 token_reurl = config['REURL_TOKEN']
 
-def get_articles_paginate(page, per_page):
-    return Article.query.order_by(Article.published.desc()).paginate(page=page,per_page=per_page,max_per_page=100,error_out=False)
-
-
-def get_pyptt_user_subs_board_with_latest_time():
+def get_articles_paginate(page = 1, per_page = 10):
     all_results = (
-                    Board
-                    .query
-                    .join(Subs, Subs.board == Board.board)
-                    .join(UserSubs, UserSubs.subs_id == Subs.id)
-                    .distinct()
-                    .all()
-                    )
+        Article
+        .query
+        .order_by(Article.published.desc())
+        .paginate(page=page,per_page=per_page,max_per_page=100,error_out=False)
+        )
     return all_results
 
 
-def get_pyptt_user_board_key():
+def get_board_with_subs():
     all_results = (
-                    db.session
-                    .query(User, Subs)
-                    .join(UserSubs, UserSubs.subs_id == Subs.id)
-                    .join(User, User.id == UserSubs.user_id)
-                    .distinct()
-                    .all()
-                    
-                    )
+        db.session
+        .query(Board,Subs,User)
+        .filter(UserSubs.subs_id==Subs.id)
+        .filter(Subs.board==Board.board)
+        .filter(User.id==UserSubs.user_id)
+        .all()
+        )
     return all_results
 
 
 def crawl_ptt(board):
     url =  'https://www.ptt.cc/atom/' + board + '.xml'
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0'}
-    response = requests.get(url,headers = headers)
+    response = requests.get(url,headers = headers,proxies={'http':'http://175.183.82.221:80'})
     soup = BeautifulSoup(response.content,'html.parser')
     articlelist = list()
     for entry in soup.find_all('entry') :
@@ -59,90 +56,142 @@ def crawl_ptt(board):
         author = entry.find('author').find('name').text
         published = entry.find('published').text
         content = entry.find('content').text.strip('<pre> ').strip('\n</pre>')
-        corr_time = str(published[:10]) + ' ' + str(published[11:19])
         article = Article(board=board, author=author, title=title, link=link, content=content,
-            published=datetime.datetime.strptime(corr_time,'%Y-%m-%d %H:%M:%S').astimezone(datetime.timezone(datetime.timedelta(hours=+8))))
+            published=datetime.datetime.strptime(published,'%Y-%m-%dT%H:%M:%S%z'), id=uuid.uuid4())
         articlelist.append(article) # new to old
     logger.info(f"{'{:<12}'.format(board)} {articlelist[0].published}")
     return articlelist
 
 
-def update_pyptt_board_latest_time(blt_list):
-    for blt in blt_list:
-        (
-            db.session
-            .query(Board)
-            .filter(Board.board == blt['board'])
-            .update({Board.latest_time: blt['latest_time']})
-            )
-    db.session.commit()
+def update_pyptt_board_latest_time(boardDict):
+    for board, boardInfo in boardDict.items():
+        board.latest_time = boardInfo['article'][0].published
     return
 
 
 def update_pyptt_article(article_list):
     for article in article_list:
-        article_dict = article.__dict__
-        article_dict.pop('_sa_instance_state')
-        insert_stmt = db.dialects.postgresql.insert(Article).values(article_dict)
-        update_stmt = insert_stmt.on_conflict_do_update(constraint="article_unique",set_=dict(link=article.link))
-        db.session.execute(update_stmt)
+        db.session.add(article)
+    return
+
+def update_subs_article(subs_article):
+    for subs, article in subs_article:
+        db.session.add(SubsArticle(subs_id=subs.id,article_id=article.id))
+    return
+
+def notify_subs_article(articleList,user):
+    newfeed_article = list()
+    for article in articleList:
+        newfeed_article.append('{:<12}'.format(article.board) + ' ' + article.link + '\n' + article.title)# board link <br> title
+    while len(newfeed_article) > 0:
+        newline_chara = '\n'
+        msg_user = f"```{newline_chara.join(newfeed_article[:10])}```"
+        MessageService.lineNotifyMessage(msg_user,user.chat_id)
+        newfeed_article = newfeed_article[10:]
+    return
+
+
+def filter_article(constrains = dict(), page = 1, per_page = 10):
+    ands = list()
+    for column,value in constrains.items():
+        if value == '':
+            continue
+        if column == 'board':
+            ands.append(and_(Article.board==value))
+        elif column == 'author':
+            ands.append(and_(Article.author.contains(value)))
+        elif column == 'title':
+            ands.append(and_(Article.title.ilike(f'%{value}%')))
+        elif column == 'startDate':
+            ands.append(and_(Article.published >= datetime.datetime.strptime(value + " 00:00:00", "%Y/%m/%d %H:%M:%S").astimezone(tzTaipei)))
+        elif column == 'endDate':
+            ands.append(and_(Article.published <= datetime.datetime.strptime(value + " 23:59:59", "%Y/%m/%d %H:%M:%S").astimezone(tzTaipei)))
+    return (Article.query.filter(*ands).order_by(Article.published.desc())
+        .paginate(page=page,per_page=per_page,max_per_page=100,error_out=False))
+
+
+def initial_filter():
+    Board_list = Board.query.order_by(Board.board).all()
+    return {'board':Board_list}
+
+
+def delete_old_articles(days):
+    logger.info(f'delete old articles before {days} days ago')
+    delete_days_range = (datetime.datetime.now() - datetime.timedelta(days = days)).astimezone(datetime.timezone.utc)
+    subsarticles = (
+                    SubsArticle
+                    .query
+                    .join(Article,Article.id == SubsArticle.article_id)
+                    .filter(Article.published < delete_days_range)
+                    .order_by(Article.published.desc())
+                    .all()
+                    )
+    logger.info(subsarticles)
+    for subarticle in subsarticles:
+        db.session.delete(subarticle)
     db.session.commit()
+    articles = (
+                Article.query
+                .filter(Article.published < delete_days_range)
+                .order_by(Article.published.desc())
+                .all()
+                )
+    logger.info(articles)
+    for article in articles:
+        db.session.delete(article)
+    db.session.commit()
+    logger.info('articles deleted successfully')
+
 
 
 def check_ptt_newfeed():
     logger.info('Checking for ptt newfeed')
-    board_latest_time = get_pyptt_user_subs_board_with_latest_time()
-    logger.debug(board_latest_time)
-    blt = dict()
-    for board in board_latest_time:
-        blt[board.board] = dict()
-        blt[board.board]['pre_latest_time'] = board.latest_time.astimezone(datetime.timezone(datetime.timedelta(hours=+8)))
-    logger.debug(blt)
-    user_board_key_list = get_pyptt_user_board_key()
-    logger.debug(user_board_key_list)
-    ubk = dict()
-    for user, subs in user_board_key_list:
-        if user not in ubk:
-            ubk[user] = dict()
-        if subs.board not in ubk[user]:
-            ubk[user][subs.board] = list()
-        ubk[user][subs.board].append(subs.sub_key)
-    logger.debug(ubk)
+    board_with_user = get_board_with_subs()
+    boardDict = {
+        pair1[0]:{
+            'subs':list(dict.fromkeys([
+                pair2[1] for pair2 in board_with_user if pair1[0]==pair2[0] and pair2[1]
+            ])),
+            'article':[]
+        }
+        for pair1 in board_with_user
+    }
+    userDict = {
+        pair1[2]:[
+                pair2[1] for pair2 in board_with_user if pair1[2]==pair2[2]
+        ]
+        for pair1 in board_with_user
+    }
     try:
-        for boardName in blt:
-            blt[boardName]['article'] = crawl_ptt(boardName)
-            blt[boardName]['now_latest_time'] = blt[boardName]['article'][0].published
-            time.sleep(1)
         to_update_pyptt_article = list()
-        for user in ubk:
-            newfeed_article = list()
-            for boardName in ubk[user]:
-                latesttime = blt[boardName]['pre_latest_time']
-                _minute = latesttime.time().minute
-                if  _minute >= 0 and _minute < 20 :
-                    token = token_reurl[0]
-                elif _minute >= 20 and _minute < 40 :
-                    token = token_reurl[1]
-                elif _minute >= 40 and _minute < 60 :
-                    token = token_reurl[2]
-                for article in reversed(blt[boardName]['article']) : # old to new
-                    if article.published > latesttime:
-                        for pattern in ubk[user][boardName]:
-                            _pattern = re.compile(pattern,flags=re.IGNORECASE)
-                            if re.search(_pattern,article.title) :
-                                if 'reurl.cc' not in article.link:
-                                    article.link = CommonService.reurl(token,article.link)
-                                time.sleep(3)
-                                newfeed = 1
-                                morefeed = 1
-                                newfeed_article.append('{:<12}'.format(boardName) + ' ' + article.link + '\n' + article.title)    # board link <br> title
+        subs_article = list()
+        for board, boardInfo in boardDict.items():
+            boardInfo['article'] = crawl_ptt(board.board)
+            latestTime = board.latest_time
+            _minute = latestTime.time().minute
+            if  _minute >= 0 and _minute < 20 :
+                token = token_reurl[0]
+            elif _minute >= 20 and _minute < 40 :
+                token = token_reurl[1]
+            elif _minute >= 40 and _minute < 60 :
+                token = token_reurl[2]
+            for article in reversed(boardInfo['article']) : # old to new
+                if article.published > latestTime:
+                    for subs in boardInfo['subs']:
+                        _pattern = re.compile(subs.sub_key,flags=re.IGNORECASE)
+                        if re.search(_pattern,article.title) :
+                            if 'reurl.cc' not in article.link:
+                                article.link = CommonService.reurl(token,article.link)
+                            subs_article.append((subs, article))
+                            if article not in to_update_pyptt_article:
                                 to_update_pyptt_article.append(article)
-                                break
-            while len(newfeed_article) > 0:
-                newline_chara = '\n'
-                msg_user = f"```{newline_chara.join(newfeed_article[:10])}```"
-                MessageService.lineNotifyMessage(msg_user,user.chat_id)
-                newfeed_article = newfeed_article[10:]
+        for user, userSubs in userDict.items():
+            newfeed_article = list()
+            for subs, article in subs_article:
+                if subs in userSubs and article not in newfeed_article:
+                    newfeed_article.append(article)
+            notify_subs_article(newfeed_article, user)
+            
     except IndexError:
         logger.error(str(IndexError))
         pass
@@ -155,20 +204,15 @@ def check_ptt_newfeed():
     except Exception as e:
         logger.error(str(e))
         pass
-    update_latesttime = list()
-    for boardName in blt:
-        if blt[boardName]['now_latest_time'] != blt[boardName]['pre_latest_time']:
-            update_latesttime.append({'latest_time':blt[boardName]['now_latest_time'],'board':boardName})
-    if len(to_update_pyptt_article) > 0:
+
+    try:
+        update_pyptt_board_latest_time(boardDict)
         update_pyptt_article(to_update_pyptt_article)
-    if len(update_latesttime) > 0:
-        done = 0
-        while done == 0:
-            try:
-                update_pyptt_board_latest_time(update_latesttime)
-                done = 1
-                logger.info('Update ptt newfeed successfully')
-            except Exception as e:
-                MessageService.tgNotifyMessage(f'{__name__} - Update PyPTT board list error:{e}')
-                logger.error(str(e))
+        update_subs_article(subs_article)
+        db.session.commit()
+        logger.info('Update ptt newfeed successfully')
+    except Exception as e:
+        MessageService.tgNotifyMessage(f'{__name__} - Update PyPTT board list error:{e}')
+        logger.error(str(e))
+        db.session.rollback()
     logger.info('Checking for ptt newfeed successfully')

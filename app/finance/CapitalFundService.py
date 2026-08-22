@@ -59,13 +59,13 @@ def check_capitalfund_newfeed():
                 latest_date_in_db_str = latest_date_in_db.strftime('%Y-%m-%d')
                 fundName = capifund['data']['fundName']
                 fundShortname = capifund['data']['shortName']
-                latestday = capifund['data']['netDate'][:10]
+                latestday = capifund['data']['netDate']
                 netValue = capifund['data']['netValue']
                 netPercent = capifund['data']['netPercent']
-                if latestday != latest_date_in_db_str :
-                    msg = f'{fundShortname}\n{latestday}\n淨值：{netValue}\n漲跌幅：{netPercent}%'
+                if latestday[:10] != latest_date_in_db_str :
+                    msg = f'{fundShortname}\n{latestday[:10]}\n淨值：{netValue}\n漲跌幅：{netPercent}%'
                     logger.info(msg)
-                    fld_list.append((fund,datetime.datetime.strptime(latestday,'%Y-%m-%d').astimezone(tzTaipei)))
+                    fld_list.append((fund,datetime.datetime.strptime(latestday,'%Y-%m-%dT%H:%M:%S%z')))
                     for user in userList:
                         MessageService.lineNotifyMessage(msg,user.chat_id)
             except Exception as e:

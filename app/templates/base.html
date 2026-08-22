@@ -16,7 +16,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js'></script>
-        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     </head>
     <body>
         <!-- Navigation-->
@@ -30,6 +29,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('ptt.index') }}">PTT</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('finance.index') }}">Finance</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('store.index') }}">Store</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
@@ -59,8 +59,10 @@
                         {% endblock %}
                     </ol>
                 </nav>
-            {% block content %}
-            {% endblock %}
+                <div class="container">
+                    {% block content %}
+                    {% endblock %}
+                </div>
             </div>
         </main>
         <!-- Footer-->
