@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('store.index') }}">Store</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('store.discord_bot_stock_subscribe') }}">咕咕雞－股票機器人會員</a></li>
+<li class="breadcrumb-item active" aria-current="page">服務條款</li>
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="mb-3">服務條款 (Terms of Service)</h1>
+    <p class="text-muted mb-4">最後更新日期：2026 年 8 月 22 日</p>
+
+    <h2 class="h4 mt-4">1. 服務說明</h2>
+    <p>Stock Discord Bot（以下簡稱「本機器人」）是一個在 Discord 平台上運行的股票資訊查詢工具，提供台股及美股的即時報價、K 線圖、三大法人資訊、技術分析等功能。</p>
+
+    <h2 class="h4 mt-4">2. 使用條件</h2>
+    <p>使用本機器人即表示您同意以下條款：</p>
+    <ul>
+        <li>您必須遵守 Discord 的<a href="https://discord.com/terms" target="_blank">服務條款</a>及<a href="https://discord.com/guidelines" target="_blank">社群守則</a>。</li>
+        <li>您必須年滿 13 歲（或您所在地區規定的最低年齡）。</li>
+        <li>您不得濫用、破壞或干擾本機器人的正常運作。</li>
+        <li>您不得利用本機器人從事任何違法活動。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">3. 免責聲明</h2>
+    <p>本機器人提供的所有股票資訊僅供參考，不構成任何投資建議。</p>
+    <ul>
+        <li>股票資訊可能存在延遲或誤差，我們不保證資料的即時性與準確性。</li>
+        <li>因使用本機器人資訊所做的任何投資決策，使用者需自行承擔所有風險與責任。</li>
+        <li>我們不對因使用本服務而造成的任何直接或間接損失負責。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">4. 服務可用性</h2>
+    <ul>
+        <li>本機器人以「現況」(as-is) 方式提供，不保證 100% 持續可用。</li>
+        <li>我們保留隨時修改、暫停或終止服務的權利，且無需事先通知。</li>
+        <li>因維護、更新或不可抗力因素導致服務中斷，我們不承擔任何責任。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">5. 使用者行為規範</h2>
+    <p>使用本機器人時，您同意不會：</p>
+    <ul>
+        <li>發送大量重複指令（洗版/刷屏）以干擾服務。</li>
+        <li>嘗試利用漏洞或非預期方式存取未授權的功能或資料。</li>
+        <li>將本機器人用於自動化交易或商業牟利目的（除非獲得授權）。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">6. 智慧財產權</h2>
+    <p>本機器人的程式碼、設計及相關內容受著作權保護。股票資料來源於公開市場資訊，其權利歸原始資料提供者所有。</p>
+
+    <h2 class="h4 mt-4">7. 條款修改</h2>
+    <p>我們保留隨時修改本服務條款的權利。修改後繼續使用本機器人，即視為您接受修改後的條款。</p>
+
+    <h2 class="h4 mt-4">8. 聯繫方式</h2>
+    <p>如對本服務條款有任何疑問，請透過 Discord 伺服器聯繫管理員。</p>
+</section>
+{% endblock %}
