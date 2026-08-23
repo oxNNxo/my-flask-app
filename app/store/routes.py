@@ -14,6 +14,14 @@ def index():
 def discord_bot_stock_subscribe():
     return render_template('store/discord_bot_subscribe.html')
 
+@bp.route('/discord-bot-stock-subscribe/privacy')
+def discord_bot_stock_subscribe_privacy():
+    return render_template('store/discord_bot_privacy.html')
+
+@bp.route('/discord-bot-stock-subscribe/terms')
+def discord_bot_stock_subscribe_terms():
+    return render_template('store/discord_bot_terms.html')
+
 @bp.route('/ecpay/callback', methods = ['POST'])
 def ecpay_callback():
     logger.debug(request.values)
