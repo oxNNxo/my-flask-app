@@ -6,7 +6,6 @@ from app import LogService
 
 logger = logging.getLogger(__name__)
 
-
 @bp.route('/')
 def index():
     return render_template('index.html')
@@ -14,6 +13,14 @@ def index():
 @bp.route('/about')
 def about():
     return render_template('about.html')
+
+@bp.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@bp.route('/terms')
+def terms():
+    return render_template('terms.html')
 
 @bp.after_request
 def log_request(response):
