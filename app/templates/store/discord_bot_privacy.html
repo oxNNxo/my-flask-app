@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('store.index') }}">Store</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('store.discord_bot_stock_subscribe') }}">咕咕雞－股票機器人會員</a></li>
+<li class="breadcrumb-item active" aria-current="page">隱私權政策</li>
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="mb-3">隱私權政策 (Privacy Policy)</h1>
+    <p class="text-muted mb-4">最後更新日期：2026 年 8 月 22 日</p>
+
+    <h2 class="h4 mt-4">1. 資料蒐集</h2>
+    <p>本機器人在您使用服務時，可能蒐集以下資訊：</p>
+    <ul>
+        <li><strong>Discord 使用者 ID</strong>：用於識別使用者身份及會員功能。</li>
+        <li><strong>訊息內容</strong>：僅限於機器人所在頻道的公開訊息，用於指令解析與聊天分析功能。</li>
+        <li><strong>頻道 ID 與伺服器 ID</strong>：用於識別訊息來源與提供頻道分析服務。</li>
+        <li><strong>指令使用紀錄</strong>：包含查詢的股票代號、使用時間等，用於服務改善與統計分析。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">2. 資料用途</h2>
+    <p>我們蒐集的資料僅用於以下目的：</p>
+    <ul>
+        <li>提供及維護機器人的核心功能（股票查詢、K 線圖產生等）。</li>
+        <li>聊天活躍度分析與股票熱門度統計。</li>
+        <li>會員系統管理與權限控制。</li>
+        <li>改善服務品質與使用者體驗。</li>
+        <li>偵測並防止濫用行為。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">3. 資料儲存</h2>
+    <ul>
+        <li>訊息紀錄儲存於受保護的 PostgreSQL 資料庫中。</li>
+        <li>部分運行資料以加密的 JSON 格式儲存於伺服器本地。</li>
+        <li>截圖等暫存檔案會定期清理。</li>
+        <li>我們採取合理的技術措施保護您的資料安全。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">4. 資料分享</h2>
+    <p>我們<strong>不會</strong>將您的個人資料出售、交易或轉讓給第三方，除非：</p>
+    <ul>
+        <li>法律要求我們提供。</li>
+        <li>為保護我們的權利、財產或安全所必要。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">5. 資料保留</h2>
+    <ul>
+        <li>訊息紀錄：持續保留用於歷史分析功能。</li>
+        <li>股票查詢紀錄：持續保留用於統計分析。</li>
+        <li>如需刪除您的資料，請聯繫管理員，我們將在合理時間內處理。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">6. 使用者權利</h2>
+    <p>您有權：</p>
+    <ul>
+        <li>要求查閱我們所持有關於您的資料。</li>
+        <li>要求刪除與您相關的資料。</li>
+        <li>退出使用本機器人的伺服器以停止後續資料蒐集。</li>
+    </ul>
+
+    <h2 class="h4 mt-4">7. 兒童隱私</h2>
+    <p>本機器人不針對 13 歲以下的兒童提供服務。我們不會故意蒐集 13 歲以下兒童的個人資訊。如發現有兒童資料被誤蒐集，我們將立即刪除。</p>
+
+    <h2 class="h4 mt-4">8. Cookie 與追蹤技術</h2>
+    <p>本網頁不使用 Cookie 或任何追蹤技術。本機器人運行於 Discord 平台上，不涉及額外的追蹤機制。</p>
+
+    <h2 class="h4 mt-4">9. 政策修改</h2>
+    <p>我們保留隨時修改本隱私權政策的權利。重大變更時將透過 Discord 伺服器公告通知使用者。</p>
+
+    <h2 class="h4 mt-4">10. 聯繫方式</h2>
+    <p>如對本隱私權政策有任何疑問或需行使您的資料權利，請透過 Discord 伺服器聯繫管理員。</p>
+</section>
+{% endblock %}
